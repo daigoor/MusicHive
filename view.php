@@ -66,8 +66,22 @@ include('functions/functions.php');
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
                         <div class="row">
-                            <div class="col-md-9">Youtube here</div>
-                            <div class="col-md-3">lists here</div>
+                            <div class="col-md-9">
+                                 <div id="player"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">Your playlists</div>
+                                  <div class="panel-body">
+                                  <?php $playlists = get_playlists($mysqli); ?>
+                                    <?php foreach ($playlists as $playlist): ?>
+                                     <button type="button" class="btn btn-default btn-block"><?php
+                                     echo $playlist['name'];?>
+                                    </button>                                          
+                                    <?php endforeach ?>
+                                  </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -160,6 +174,41 @@ include('functions/functions.php');
 
       });
     </script>
+      <script>
+          var tag = document.createElement('script');
+          tag.src = "https://www.youtube.com/iframe_api";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+          var player;
+          function onYouTubePlayerAPIReady() {
+            player = new YT.Player('player', {
+              height: '390',
+              width: '100%',
+             loadPlaylist:{
+                listType:'playlist',
+                index:parseInt(0),
+                suggestedQuality:'small'
+             },
+              events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+              }
+            });
+          }
+          function onPlayerReady(event) {
+            event.target.loadPlaylist([<?php echo '"'.implode('","',  $videos ).'"' ?>]);
+          }
+          var done = false;
+          function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !done) {
+             // setTimeout(stopVideo, 60000);
+              done = true;
+            }
+          }
+          function stopVideo() {
+            player.stopVideo();
+          }
+        </script>
 </body>
 
 </html>
