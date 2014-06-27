@@ -1,7 +1,9 @@
 <?php
 header('P3P: CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
-include('includes/constants.php');
-include('functions/fb.php');?>
+include('includes/db.php');
+include('functions/fb.php');
+include('functions/functions.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -30,10 +32,14 @@ include('functions/fb.php');?>
   <body>
 
     <div class="container">
-     
-
+     <?php echo $_SESSION['fbid']; ?>
+     <?php $q = get_playlists_friends($mysqli,1); ?>
+<?php  while ($row = mysqli_fetch_assoc($q)) {
+ var_dump($row);
+}?>
       <div class="jumbotron">
         <h1>Just A Weird App</h1>
+        <?php  $videos  = get_friend_youtube($_SESSION['session'],"10154268085775048");?>
         <p>
        <div id="player"></div>
         <script>

@@ -1,10 +1,4 @@
 <?php
-session_start();
-
-
-// include required files form Facebook SDK
-
-// added in v4.0.5
 require_once('Facebook/HttpClients/FacebookHttpable.php');
 require_once('Facebook/HttpClients/FacebookCurl.php');
 require_once('Facebook/HttpClients/FacebookCurlHttpClient.php');
@@ -82,82 +76,69 @@ if (isset($_SESSION) && isset($_SESSION['fb_token_sw'])) {
 
 // see if we have a session
 if (isset($session)) {
-    $rx                      = '~
-    ^(?:https?://)?              # Optional protocol
-     (?:www\.)?                  # Optional subdomain
-     (?:youtube\.com|youtu\.be)  # Mandatory domain name
-     /watch\?v=([^&]+)           # URI with video id as capture group 1
-     ~x';
-    // save the session
     $_SESSION['fb_token_sw'] = $session->getToken();
-    // create a session using saved token or the new one we generated at login
-    $session                 = new FacebookSession($session->getToken());
-    
-    $logoutURL = $helper->getLogoutUrl($session, 'http://yourdomain.com/log');
-    
-    // graph api request for user data
-    $request          = new FacebookRequest($session, 'GET', '/me');
-    $response         = $request->execute();
-    $videos           = array();
-    // get response
+    $session = new FacebookSession($session->getToken());  
+    $_SESSION['session'] = $session;  
+    $request  = new FacebookRequest($session, 'GET', '/me');
+    $response = $request->execute();
+    $videos   = array();
+
     $user_profile     = $response->getGraphObject()->asArray();
     $_SESSION['fbid'] = $user_profile['id'];
-    
-    $request2     = new FacebookRequest($session, 'GET', '/me/friends?limit=10');
-    $response2    = $request2->execute();
-    $friends      = $response2->getGraphObject()->asArray();
-    $friends_list = $friends['data'];
-    foreach ($friends_list as $friend) {
-        $friend   = (array) $friend;
-        $request  = new FacebookRequest($session, 'GET', "/" . $friend['id'] . "/feed?fields=source&limit=1000");
-        $response = $request->execute();
-        $links    = $response->getGraphObject()->asArray();
-        if (!empty($links['data'])) {
-            foreach ($links['data'] as $link) {
-                $link = (array) $link;
-                if (!empty($link['source']) || isset($link['source'])) {
-                    if (preg_match('/youtube\.com\/watch\?v=([^\&\?\/]+)/', $link['source'], $id)) {
-                        $videos[] = $id[1];
-                    } else if (preg_match('/youtube\.com\/embed\/([^\&\?\/]+)/', $link['source'], $id)) {
-                        $videos[] = $id[1];
-                    } else if (preg_match('/youtube\.com\/v\/([^\&\?\/]+)/', $link['source'], $id)) {
-                        $videos[] = $id[1];
-                    } else if (preg_match('/youtu\.be\/([^\&\?\/]+)/', $link['source'], $id)) {
-                        $videos[] = $id[1];
-                    } else {
-                    }
-                }
+
+
+   
+    // foreach ($friends_list as $friend) {
+    //     $friend   = (array) $friend;
+    //     $request  = new FacebookRequest($session, 'GET', "/" . $friend['id'] . "/feed?fields=source&limit=1000");
+    //     $response = $request->execute();
+    //     $links    = $response->getGraphObject()->asArray();
+    //     if (!empty($links['data'])) {
+    //         foreach ($links['data'] as $link) {
+    //             $link = (array) $link;
+    //             if (!empty($link['source']) || isset($link['source'])) {
+    //                 if (preg_match('/youtube\.com\/watch\?v=([^\&\?\/]+)/', $link['source'], $id)) {
+    //                     $videos[] = $id[1];
+    //                 } else if (preg_match('/youtube\.com\/embed\/([^\&\?\/]+)/', $link['source'], $id)) {
+    //                     $videos[] = $id[1];
+    //                 } else if (preg_match('/youtube\.com\/v\/([^\&\?\/]+)/', $link['source'], $id)) {
+    //                     $videos[] = $id[1];
+    //                 } else if (preg_match('/youtu\.be\/([^\&\?\/]+)/', $link['source'], $id)) {
+    //                     $videos[] = $id[1];
+    //                 } else {
+    //                 }
+    //             }
                 
                 
-            }
-        }
-        $request  = new FacebookRequest($session, 'GET', "/" . $friend['id'] . "/links?fields=link&limit=1000");
-        $response = $request->execute();
-        $links    = $response->getGraphObject()->asArray();
-        if (!empty($links['data'])) {
-            foreach ($links['data'] as $link) {
-                $link = (array) $link;
+    //         }
+    //     }
+    //     $request  = new FacebookRequest($session, 'GET', "/" . $friend['id'] . "/links?fields=link&limit=1000");
+    //     $response = $request->execute();
+    //     $links    = $response->getGraphObject()->asArray();
+    //     if (!empty($links['data'])) {
+    //         foreach ($links['data'] as $link) {
+    //             $link = (array) $link;
                 
-                if (!empty($link['link']) || isset($link['link'])) {
-                    if (preg_match('/youtube\.com\/watch\?v=([^\&\?\/]+)/', $link['link'], $id)) {
-                        $videos[] = $id[1];
-                    } else if (preg_match('/youtube\.com\/embed\/([^\&\?\/]+)/', $link['link'], $id)) {
-                        $videos[] = $id[1];
-                    } else if (preg_match('/youtube\.com\/v\/([^\&\?\/]+)/', $link['link'], $id)) {
-                        $videos[] = $id[1];
-                    } else if (preg_match('/youtu\.be\/([^\&\?\/]+)/', $link['link'], $id)) {
-                        $videos[] = $id[1];
-                    } else {
-                        // not an youtube video
-                    }
-                }
-            }
+    //             if (!empty($link['link']) || isset($link['link'])) {
+    //                 if (preg_match('/youtube\.com\/watch\?v=([^\&\?\/]+)/', $link['link'], $id)) {
+    //                     $videos[] = $id[1];
+    //                 } else if (preg_match('/youtube\.com\/embed\/([^\&\?\/]+)/', $link['link'], $id)) {
+    //                     $videos[] = $id[1];
+    //                 } else if (preg_match('/youtube\.com\/v\/([^\&\?\/]+)/', $link['link'], $id)) {
+    //                     $videos[] = $id[1];
+    //                 } else if (preg_match('/youtu\.be\/([^\&\?\/]+)/', $link['link'], $id)) {
+    //                     $videos[] = $id[1];
+    //                 } else {
+    //                     // not an youtube video
+    //                 }
+    //             }
+    //         }
             
             
             
             
-        }
-    }
+    //     }
+    // }
     
     
     
