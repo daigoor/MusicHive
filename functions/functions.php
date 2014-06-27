@@ -38,14 +38,16 @@ use Facebook\FacebookAuthorizationException;
 use Facebook\GraphObject;
 use Facebook\GraphSessionInfo;
 
-function get_friends($session){
+function get_friends(){
+	$session = $_SESSION['session'];
 	$request     = new FacebookRequest($session, 'GET', '/me/friends?limit=10');
     $response   = $request->execute();
     $friends      = $response->getGraphObject()->asArray();
     return $friends['data'];
 }
 
-function get_friend_youtube($session,$user_id,$method="feed",$filter="link",$limit="1000"){
+function get_friend_youtube($user_id,$method="feed",$filter="link",$limit="1000"){
+	$session = $_SESSION['session'];
 	$request  = new FacebookRequest($session, 'GET', "/$user_id/feed?fields=$filter&limit=$limit");
 	$response = $request->execute();
 	$links    = $response->getGraphObject()->asArray();

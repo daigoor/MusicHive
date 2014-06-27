@@ -25,6 +25,7 @@ include('functions/functions.php');
 
     <!-- Custom Theme CSS -->
     <link href="css/grayscale.css" rel="stylesheet">
+    <link href="css/select2.css" rel="stylesheet">
 
 </head>
 
@@ -49,7 +50,7 @@ include('functions/functions.php');
                         <a href="#page-top"></a>
                     </li>
                     <li class="page-scroll">
-                        <a href="#start">Start</a>
+                        <a href="#start">Create Play List</a>
                     </li>
 
                 </ul>
@@ -64,13 +65,11 @@ include('functions/functions.php');
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
-                        <h1 class="brand-heading">Music Hive</h1>
-                        <p class="intro-text">Their music is yours</p>
-                        <div class="page-scroll">
-                            <a href="#start" class="btn btn-circle">
-                                <i class="fa fa-angle-double-down animated"></i>
-                            </a>
+                        <div class="row">
+                            <div class="col-md-9">Youtube here</div>
+                            <div class="col-md-3">lists here</div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -79,18 +78,22 @@ include('functions/functions.php');
 
     <section id="start" class="container content-section text-center">
         <div class="row">
+        <form id="playlist-form" method="post" action="#">
             <div class="col-lg-8 col-lg-offset-2">
-                <h2>Login with</h2>
+                <h2>Name it</h2>
+                <input type="text" style="width:300px;min-height: 26px;" id="name" name="name"/>
+                <h2>Choose Your friends</h2>
+                <input type="hidden" id="select" name="friends[]"/>
+                <input type="hidden" id="action" name="action" value="save"/>
                 <p></p>
                 <ul class="list-inline banner-social-buttons">
-                    <li><a href="#" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
-                    </li>
-                    <li><a href="view.html" class="btn btn-default btn-lg"><i class="fa fa-facebook fa-fw"></i> <span class="network-name">Facebook</span></a>
-                    </li>
-                    <li><a href="#" class="btn btn-default btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name">Google+</span></a>
+                    <li><button id="save-btn" class="btn btn-default btn-lg"><i class="fa fa-save fa-fw"></i> <span class="network-name">Save</span></button>
                     </li>
                 </ul>
+                <div id="message" style="display:none;">Saved...</div>
+                <div id="loading" style="display:none;"><i class="fa fa-spinner fa-spin"></i> </div>
             </div>
+            </form>
         </div>
     </section>
 
@@ -107,6 +110,56 @@ include('functions/functions.php');
     <!-- Custom Theme JavaScript -->
     <script src="js/grayscale.js"></script>
 
+    <script src="js/select2.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $( "#save-btn" ).click(function(event) {
+            event.preventDefault();
+            $.ajax({
+            dataType: "JSON",
+            type:"POST",
+            url:"ajax.php",
+            data:$('#playlist-form').serialize(),
+            beforeSend : function(data){
+                $("#loading").show();
+                $("#message").hide();
+            }
+            ,
+            success: function(data)
+            {
+               if(data.saved){
+                  $("#loading").hide();
+                  $("#message").show();
+               }
+            }
+        });
+        });
+    });
+    </script>
+    <script>
+      $(function(){
+
+        // display logs
+        function log(text) {
+          $('#logs').append(text + '<br>');
+        }
+
+        $('#select').select2({
+            data:[
+            <?php $friends = get_friends(); ?>
+                <?php foreach ($friends as $friend) { ?>
+                    <?php $friend = (array)$friend; ?>
+                {id:<?php echo $friend['id'];?>,text:"<?php echo $friend['name'];?>"},
+              <?php  } ?>
+               
+            ],
+            multiple: true,
+            width: "300px"
+        })
+
+
+      });
+    </script>
 </body>
 
 </html>
