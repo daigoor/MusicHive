@@ -30,7 +30,7 @@ include('functions/functions.php');
 </head>
 
 <body id="page-top" data-spy="scroll" data-target=".navbar-custom">
-
+        <script src="https://connect.facebook.net/en_US/all.js"></script>
     <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header page-scroll">
