@@ -52,6 +52,9 @@ include('functions/functions.php');
                     <li class="page-scroll">
                         <a href="#start">Create Play List</a>
                     </li>
+                    <li>
+                        <a href="#" onclick="javascript:invite_friends();return false;">Bring Your Friends</a>
+                    </li>
 
                 </ul>
             </div>
@@ -211,6 +214,21 @@ include('functions/functions.php');
           function stopVideo() {
             player.stopVideo();
           }
+        </script>
+      <script>
+      FB.init({
+        appId: '264080490446089',
+        frictionlessRequests: true
+      });
+
+      
+      function invite_friends() {
+        FB.ui({method: 'apprequests',
+          message: 'Dude, I need your music'
+        }, requestCallback);
+      }
+      function requestCallback(response) {
+      }
         </script>
 </body>
 
