@@ -75,9 +75,9 @@ include('functions/functions.php');
                                   <div class="panel-body">
                                   <?php $playlists = get_playlists($mysqli); ?>
                                     <?php foreach ($playlists as $playlist): ?>
-                                     <button type="button" class="btn btn-default btn-block"><?php
+                                     <button type="button" class="btn btn-default btn-block select_playlist" name="<?php echo $playlist['id'];?>"><?php
                                      echo $playlist['name'];?>
-                                    </button>                                          
+                                    </button>
                                     <?php endforeach ?>
                                   </div>
                                 </div>
@@ -165,7 +165,7 @@ include('functions/functions.php');
                     <?php $friend = (array)$friend; ?>
                 {id:<?php echo $friend['id'];?>,text:"<?php echo $friend['name'];?>"},
               <?php  } ?>
-               
+
             ],
             multiple: true,
             width: "300px"
@@ -174,7 +174,10 @@ include('functions/functions.php');
 
       });
     </script>
+
       <script>
+
+
           var tag = document.createElement('script');
           tag.src = "https://www.youtube.com/iframe_api";
           var firstScriptTag = document.getElementsByTagName('script')[0];

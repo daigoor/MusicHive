@@ -57,10 +57,10 @@ if (isset($_SESSION) && isset($_SESSION['fb_token_sw'])) {
         // catch any exceptions
         $session = null;
     }
-    
+
 } else {
     // no session exists
-    
+
     try {
         $session = $helper->getSessionFromRedirect();
     }
@@ -71,14 +71,14 @@ if (isset($_SESSION) && isset($_SESSION['fb_token_sw'])) {
     // When validation fails or other local issues
         echo $ex->getMessage();
     }
-    
+
 }
 
 // see if we have a session
 if (isset($session)) {
     $_SESSION['fb_token_sw'] = $session->getToken();
-    $session = new FacebookSession($session->getToken());  
-    $_SESSION['session'] = $session;  
+    $session = new FacebookSession($session->getToken());
+    $_SESSION['session'] = $session;
     $request  = new FacebookRequest($session, 'GET', '/me');
     $response = $request->execute();
     $videos   = array();
@@ -87,7 +87,7 @@ if (isset($session)) {
     $_SESSION['fbid'] = $user_profile['id'];
 
 
-   
+
     // foreach ($friends_list as $friend) {
     //     $friend   = (array) $friend;
     //     $request  = new FacebookRequest($session, 'GET', "/" . $friend['id'] . "/feed?fields=source&limit=1000");
@@ -108,8 +108,8 @@ if (isset($session)) {
     //                 } else {
     //                 }
     //             }
-                
-                
+
+
     //         }
     //     }
     //     $request  = new FacebookRequest($session, 'GET', "/" . $friend['id'] . "/links?fields=link&limit=1000");
@@ -118,7 +118,7 @@ if (isset($session)) {
     //     if (!empty($links['data'])) {
     //         foreach ($links['data'] as $link) {
     //             $link = (array) $link;
-                
+
     //             if (!empty($link['link']) || isset($link['link'])) {
     //                 if (preg_match('/youtube\.com\/watch\?v=([^\&\?\/]+)/', $link['link'], $id)) {
     //                     $videos[] = $id[1];
@@ -133,18 +133,18 @@ if (isset($session)) {
     //                 }
     //             }
     //         }
-            
-            
-            
-            
+
+
+
+
     //     }
     // }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     $request     = new FacebookRequest($session, 'GET', '/me/likes/636247346470177');
     $response    = $request->execute();
     $graphObject = $response->getGraphObject()->asArray();
@@ -155,26 +155,26 @@ if (isset($session)) {
     } else {
         $fblike = false;
     }
-    
+
     $loginUrl = $helper->getLoginUrl(array(
         'email',
         'user_friends',
         'user_likes',
         'read_stream'
     ));
-    
-    
-    
+
+
+
     // print profile data
-    
+
     //print logout url using session and redirect_uri (logout.php page should destroy the session)
     //echo '<a href="' . $helper->getLogoutUrl( $session, 'http://yourwebsite.com/app/logout.php' ) . '">Logout</a>';
-    
-    
+
+
 } else {
     // show login url
     //echo '<a href="' . $helper->getLoginUrl( array( 'email', 'user_friends' ) ) . '">Login</a>';
-    
+
     $loginUrl = $helper->getLoginUrl(array(
         'email',
         'user_friends',

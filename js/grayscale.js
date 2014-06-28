@@ -16,6 +16,26 @@ $(function() {
         }, 1500, 'easeInOutExpo');
         event.preventDefault();
     });
+
+    $('.select_playlist').click(function(event) {
+        /* Act on the event */
+        $.ajax({
+            url: 'ajax.php',
+            type: 'POST',
+            dataType: 'json',
+            data: {action: 'select-playlist', id: $(this).attr('name')},
+        })
+        .done(function() {
+            console.log("success");
+        })
+        .fail(function() {
+            console.log("error");
+        })
+        .always(function() {
+            console.log("complete");
+        });
+
+    });
 });
 
 //Google Map Skin - Get more at http://snazzymaps.com/

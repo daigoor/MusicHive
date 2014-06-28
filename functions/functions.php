@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once('Facebook/HttpClients/FacebookHttpable.php');
 require_once('Facebook/HttpClients/FacebookCurl.php');
 require_once('Facebook/HttpClients/FacebookCurlHttpClient.php');
@@ -46,19 +46,24 @@ function get_friends(){
     return $friends['data'];
 }
 
-function get_friend_youtube($user_id,$method="feed",$filter="link",$limit="1000"){
+function get_friend_youtube($user_id,$method="feed",$filter="link",$limit="100"){
 	$session = $_SESSION['session'];
-	$request  = new FacebookRequest($session, 'GET', "/$user_id/feed?fields=$filter&limit=$limit");
+	$request  = new FacebookRequest($session, 'GET', "/$user_id/$method?fields=$filter&limit=$limit");
 	$response = $request->execute();
 	$links    = $response->getGraphObject()->asArray();
 	$videos = array();
-	foreach ($links['data'] as $link) {
-		$link = (array)$link;
-		if(isset($link[$filter])){
-			if($id = get_youtube_id(@$link[$filter])){
-				$videos [] = $id;
+	if(!empty($links['data'])){
+		foreach ($links['data'] as $link) {
+			$link = (array)$link;
+			if(isset($link[$filter])){
+				if($id = get_youtube_id(@$link[$filter])){
+					$videos [] = $id;
+				}
 			}
 		}
+	}
+	else{
+		get_friend_youtube($user_id,"links");
 	}
 	return $videos;
 }

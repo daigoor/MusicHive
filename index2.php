@@ -32,14 +32,9 @@ include('functions/functions.php');
   <body>
 
     <div class="container">
-     <?php echo $_SESSION['fbid']; ?>
-     <?php $q = get_friends($mysqli); ?>
-<?php  while ($row = mysqli_fetch_assoc($q)) {
- var_dump($row);
-}?>
+
       <div class="jumbotron">
         <h1>Just A Weird App</h1>
-        <?php  $videos  = get_friend_youtube($_SESSION['session'],"10154268085775048");?>
         <p>
        <div id="player"></div>
         <script>
@@ -81,7 +76,7 @@ include('functions/functions.php');
         <p><a class="btn btn-lg btn btn-primary" href="<?php echo $loginUrl;?>" role="button">Login</a></p>
       </div>
 
-     
+
 
 
     </div> <!-- /container -->
